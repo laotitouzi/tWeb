@@ -1,3 +1,5 @@
+git
+=====
 git config --global user.name  'laotitouzi'
 git config --global user.email  442748419@qq.com
 
