@@ -14,6 +14,7 @@ public class IndexController {
 	@Token(save = true)
 	public String index(HttpSession session) {
 		double d = Math.random();
+		System.out.println(d);
 		return "index";
 	}
 
