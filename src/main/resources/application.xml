@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+	http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.2.xsd
+	http://www.springframework.org/schema/mvc
+    http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+      http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
+	<!-- 默认的注解映射的支持，自动注册DefaultAnnotationHandlerMapping和AnnotationMethodHandlerAdapter -->
+	<context:property-placeholder location="classpath*:*.properties" />
+	<import resource="application_jta_db.xml" />
+	<import resource="application_activemq.xml" />
+	<mvc:annotation-driven />
+	<tx:annotation-driven />
+	<aop:aspectj-autoproxy />
+	<!-- <bean id="propertyPlaceholderConfigurer" class="org.springframework.beans.factory.config. 
+		PropertyPlaceholderConfigurer"> <property name="locations"> <list> <value>jdbc.properties</value> 
+		<value>redis.properties</value> </list> </property> </bean> -->
+	<!-- 自动扫描的包名 -->
+	<context:component-scan
+		base-package="com.ss.service,com.ss.controller,com.ss.redis,com.ss.log,com.ss.dao" />
+
+	<!-- 视图解释类 -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/templates/" />
+		<property name="suffix" value=".jsp" />
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+	</bean>
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxActive" value="50" />
+		<property name="maxIdle" value="8" />
+		<property name="maxWait" value="1000" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="true" />
+		<!-- <property name="testWhileIdle" value="true"/> -->
+	</bean>
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="104857600" />
+		<property name="maxInMemorySize" value="4096" />
+		<property name="defaultEncoding" value="utf-8" />
+	</bean>
+	
+	<bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool"
+		scope="singleton">
+		<constructor-arg index="0" ref="jedisPoolConfig" />
+		<constructor-arg index="1">
+			<list>
+				<bean class="redis.clients.jedis.JedisShardInfo">
+					<constructor-arg name="host" value="${redis.host}" />
+					<constructor-arg name="port" value="${redis.port}" />
+					<constructor-arg name="timeout" value="${redis.timeout}" />
+					<constructor-arg name="weight" value="1" />
+				</bean>
+
+				<bean class="redis.clients.jedis.JedisShardInfo">
+					<constructor-arg name="host" value="${redis.host}" />
+					<constructor-arg name="port" value="${redis.port}" />
+					<constructor-arg name="timeout" value="${redis.timeout}" />
+					<constructor-arg name="weight" value="1" />
+				</bean>
+			</list>
+		</constructor-arg>
+	</bean>
+
+	<bean id="sessionManager" class="com.ss.httpsession.RedisSessionManager">
+		<property name="redisClientTemplate" ref="redisClientTemplate"></property>
+		<property name="expirationUpdateInterval" value="600"></property>
+		<property name="sessionTimeOut" value="1800"></property>
+	</bean>
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/" />
+			<bean class="com.ss.token.TokenInterceptor" />
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/user/save" />
+			<bean class="com.ss.token.TokenValidInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+	<!-- 对静态资源文件的访问 -->
+	<mvc:resources mapping="/jsp/**" location="/jsp/"
+		cache-period="31556926" />
+	<mvc:resources mapping="/images/**" location="/WEB-INF/images/"
+		cache-period="31556926" />
+	<mvc:resources mapping="/js/**" location="/WEB-INF/js/"
+		cache-period="31556926" />
+	<mvc:resources mapping="/css/**" location="/WEB-INF/css/"
+		cache-period="31556926" />
+	<!-- <mvc:resources mapping="/*.html" location="/" cache-period="31556926" 
+		/> -->
+
+</beans> 
