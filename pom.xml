@@ -7,10 +7,10 @@
 	</properties>
 	<groupId>org.mybatis</groupId>
 	<version>1.0</version>
-	<artifactId>laotitouzi</artifactId>
+	<artifactId>tweb</artifactId>
 	<packaging>war</packaging>
 
-	<name>laotitouzi</name>
+	<name>tweb</name>
 	<url>http://www.mybatis.org</url>
 
 	<scm>
