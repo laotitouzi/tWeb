@@ -99,7 +99,7 @@
 		<dependency>
 			<groupId>com.atomikos</groupId>
 			<artifactId>transactions-jms</artifactId>
-			<version>3.9.2</version>
+			<version>4.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.atomikos</groupId>
@@ -167,9 +167,15 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.activemq</groupId>
-			<artifactId>activemq-all</artifactId>
-			<version>5.13.1</version>
+			<artifactId>activemq-core</artifactId>
+			<version>5.7.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-pool</artifactId>
+			<version>5.13.2</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>javax.jms</groupId>
@@ -205,7 +211,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>laotitouzi</finalName>
+		<finalName>tWeb</finalName>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -251,7 +257,7 @@
 					<stopKey>stop</stopKey>
 					<stopPort>5599</stopPort>
 					<webAppConfig>
-						<contextPath>/laotitouzi</contextPath>
+						<contextPath>/tWeb</contextPath>
 						<defaultsDescriptor>src/main/resources/webdefault.xml</defaultsDescriptor>
 					</webAppConfig>
 					<scanIntervalSeconds>0</scanIntervalSeconds>
