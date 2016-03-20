@@ -98,9 +98,6 @@ public class Client extends Thread {
         }  
     }  
   
-    /** 
-     * 停止客户�? 
-     */  
     private void stopServer() {  
         try {  
             if (selector != null && selector.isOpen()) {  
