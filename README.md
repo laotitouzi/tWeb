@@ -2,6 +2,9 @@ git
 =====
 git config --global user.name  'laotitouzi'  
 git config --global user.email  442748419@qq.com  
+ssh-keygen -t rsa -C "442748419@qq.com"   
+按3个回车，密码为空。(不要输密码)     
+然后到.ssh下面将id_rsa.pub里的内容复制出来粘贴到github个人中心的账户设置的ssh key里面       
 
 git remote add org git@github.com:laotitouzi/web.git  
 git add src pom.xml  增加到本地仓库  
